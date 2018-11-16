@@ -53,21 +53,35 @@ fn main() {
     let numbers_str = "one, two, three, two, three, three.";
 
     let tokens1 = _tokenize(fruits_str.clone());
-    let tokens2 = _tokenize(numbers_str);
+    let tokens2 = _tokenize(numbers_str.clone());
     println!("=== parsing fruits ===");
     println!("Tokenizer: {:?}", tokens1);
     println!("Vocabulary: {:?}", _build_vocabulary(tokens1.clone()));
-    println!("Vocabulary Counts: {:?}", _build_vocabulary_and_count(tokens1));
+    println!("Vocabulary Counts: {:?}\n", _build_vocabulary_and_count(tokens1));
 
     println!("=== parsing numbers ===");
     println!("Tokenizer: {:?}", tokens2);
     println!("Vocabulary: {:?}", _build_vocabulary(tokens2.clone()));
-    println!("Vocabulary Counts: {:?}", _build_vocabulary_and_count(tokens2));
+    println!("Vocabulary Counts: {:?}\n", _build_vocabulary_and_count(tokens2));
 
 
-    let mut vectorizer = CountVectorizer::new();
-    vectorizer.fit(fruits_str);
-    println!("Vectorizer Vocabulary: {:?}", &vectorizer.vocabulary);
+    let mut vectorizer1 = CountVectorizer::new();
+    let mut vectorizer2 = CountVectorizer::new();
+    vectorizer1.fit(fruits_str);
+    vectorizer2.fit(numbers_str);
+    println!("=== fit() with Vectorizer ===");
+    println!("Vectorizer Vocabulary: {:?}", vectorizer1.vocabulary_);
+    println!("Vectorizer Vocabulary: {:?}\n", vectorizer2.vocabulary_);
+
+    let mut vectorizer3 = CountVectorizer::new();
+    let mut vectorizer4 = CountVectorizer::new();
+    vectorizer3.fit_transform(fruits_str);
+    vectorizer4.fit_transform(numbers_str);
+    println!("=== fit_transform() with Vectorizer ===");
+    println!("Vectorizer Vocabulary: {:?}, Counts:{:?}", 
+            vectorizer3.vocabulary_, vectorizer3.vocabulary_counts_);
+    println!("Vectorizer Vocabulary: {:?}, Counts:{:?}\n", 
+            vectorizer4.vocabulary_, vectorizer4.vocabulary_counts_);
 
     //fn _count_vocab(tokens: &Vec) -> vocabulary: HashSet<&str> {};
         // count number of appearances of each word in the token
