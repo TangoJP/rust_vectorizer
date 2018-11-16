@@ -18,7 +18,7 @@ fn main() {
         .map(|f| &f[0])
         .collect::<Vec<_>>();
 
-    println!("Without function\n{:?}", fruits);
+    // println!("Without function\n{:?}", fruits);
 
 
     fn _tokenize1(doc: &str) {
@@ -30,25 +30,24 @@ fn main() {
             .iter()
             .map(|f| &f[0])
             .collect();
-        println!("{:?}", tokens);
+        println!("Tokenizer1: {:?}", tokens);
         
     };
 
-    fn _tokenize2(doc: &'static str) -> Vec<&'static str> {
+    fn _tokenize2(doc: &str) -> Vec<&str> {
         let token_pattern=r"(?u)\b\w\w+\b";
         let re = Regex::new(token_pattern).unwrap();
-        let captures = re.captures_iter(doc)
-            .collect::<Vec<_>>();
-        let tokens: Vec<&'static str> = captures
-            .iter()
-            .map(|f| &f[0])
+        let _captures: Vec<&str> = re.find_iter(doc)
+            .map(|f| f.as_str())
             .collect();
-        tokens
-        // Try closuer, i.e. lambda equivalent, instead of function
+        _captures
     };
 
-    println!("With _tokenize1()\n{:?}", _tokenize1(fruits_str));
-    println!("With _tokenize2()\n{:?}", _tokenize2(fruits_str));
+    _tokenize1(fruits_str);
+    let captures = _tokenize2(fruits_str);
+    println!("Tokenizer2: {:?}", captures)
+    //println!("With _tokenize1()\n{:?}", _tokenize1(fruits_str));
+    // println!("With _tokenize2()\n{:?}", _tokenize2(fruits_str));
 
 
         // tokenize a string into a list of words
