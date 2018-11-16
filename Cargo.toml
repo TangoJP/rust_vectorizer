@@ -1,0 +1,7 @@
+[package]
+name = "vectorizer"
+version = "0.1.0"
+authors = ["R <ryomarcher@gmail.com>"]
+
+[dependencies]
+regex = "1"
