@@ -63,7 +63,7 @@ impl<'a> CountVectorizer<'a> {
         vocabulary_inverted
     }
 
-    pub fn fit_transform1(&mut self, docs: Vec<&'a str>) -> Array2<i32> { //Vec<HashMap<i32, i32>> {
+    pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<i32> { //Vec<HashMap<i32, i32>> {
         // tokenize the document collection
         let _tokenized_docs = CountVectorizer::_tokenize_multiple_docs(docs);
 
@@ -93,17 +93,6 @@ impl<'a> CountVectorizer<'a> {
         let sorted_vec = self._sort_vocabulary_count(vec_of_map);
         sorted_vec   // Return the Vec of count HashMaps
     }
-    
-    pub fn fit_transform2(&mut self, docs: Vec<&'a str>) -> Array2<i32> {
-        // This should implement simultaneous creation of transformed vector
-        // and vocabulary to avoid looping twice over vocabulary space by skipping
-        // sorting. Follow basic flow of fit_transform1() and implement
-        // simultaneous update of the vector/array. This may come at the
-        // cost of memory, so may want to consider consuming the original docs.
-        let mut sorted_vec = Array2::<i32>::zeros((5, 5));
-        sorted_vec
-    }
-
 
     // Also, split up fit_transform into generalizable functions that can be
     // sent out as trait methods. That way, so functions can be shared with
