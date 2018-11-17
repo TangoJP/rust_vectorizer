@@ -23,4 +23,9 @@ fn main() {
     let X = vectorizer.fit_transform(docs);
     println!("(word_id: count) :{:?}", X);
     println!("(Word: word_id) : {:?}", vectorizer.vocabulary_);
+    println!("\n");
+
+    let array = vectorizer._sort_vocabulary_count(X);
+    println!("{:?}", array);
+
 }
