@@ -84,5 +84,14 @@ impl<'a> CountVectorizer<'a> {
         let sortedX = self._sort_vocabulary_count(X);
         sortedX   // Return the Vec of count HashMaps
     }
+
+    pub fn reverse_vocabulary_hashmap(&self) -> HashMap<i32, &'a str> {
+        // Utility method that returns a HashMap for vocab where k and v are swapped
+        let mut vocabulary_inverted: HashMap<i32, &str> = HashMap::new();
+        for (k, v) in self.vocabulary_.iter() {
+        vocabulary_inverted.insert(*v, k);
+        }
+        vocabulary_inverted
+    }
 }
 
