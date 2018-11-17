@@ -6,7 +6,7 @@ use std::vec::Vec;
 use std::collections::HashMap;
 use regex::Regex;
 use ndarray::Array2;
-use indexmap::IndexMap;
+// use indexmap::IndexMap;
 
 pub struct CountVectorizer<'a> {
     pub vocabulary_ : HashMap<&'a str, i32>,
@@ -41,25 +41,34 @@ impl<'a> CountVectorizer<'a> {
         _tokenized_docs
     }
 
-    fn _sort_vocabulary_count(&self, X: Vec<HashMap<i32, i32>>) -> Array2<i32>{
-        let num_rows = X.len();
+    fn _sort_vocabulary_count(&self, vec_of_map: Vec<HashMap<i32, i32>>) -> Array2<i32>{
+        let num_rows = vec_of_map.len();
         let num_columns = self.vocabulary_.len();
-        let mut sorted_X = Array2::<i32>::zeros((num_rows, num_columns));
+        let mut sorted_vec = Array2::<i32>::zeros((num_rows, num_columns));
 
         for i in 0..num_rows {
-            for key in X[i].keys() {
-                sorted_X[[i, (*key as usize)]] = *X[i].get(key).unwrap();
+            for key in vec_of_map[i].keys() {
+                sorted_vec[[i, (*key as usize)]] = *vec_of_map[i].get(key).unwrap();
             }
         }
-        sorted_X
+        sorted_vec
     }
 
-    pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<i32> { //Vec<HashMap<i32, i32>> {
+    pub fn reverse_vocabulary_hashmap(&self) -> HashMap<i32, &'a str> {
+        // Utility method that returns a HashMap for vocab where k and v are swapped
+        let mut vocabulary_inverted: HashMap<i32, &str> = HashMap::new();
+        for (k, v) in self.vocabulary_.iter() {
+        vocabulary_inverted.insert(*v, k);
+        }
+        vocabulary_inverted
+    }
+
+    pub fn fit_transform1(&mut self, docs: Vec<&'a str>) -> Array2<i32> { //Vec<HashMap<i32, i32>> {
         // tokenize the document collection
         let _tokenized_docs = CountVectorizer::_tokenize_multiple_docs(docs);
 
         // Vec to store vocab. count HashMap. Variable to return.
-        let mut X: Vec<HashMap<i32, i32>> = Vec::new();
+        let mut vec_of_map: Vec<HashMap<i32, i32>> = Vec::new();
 
         // Collect vocabulary
         let mut vocab_indexer: i32 = 0;             // indexer for unique words
@@ -79,19 +88,25 @@ impl<'a> CountVectorizer<'a> {
                     *(_vocab_counts).entry(vocab_ind).or_insert(0) += 1;
                 };
             }
-            X.push(_vocab_counts);
+            vec_of_map.push(_vocab_counts);
         }
-        let sortedX = self._sort_vocabulary_count(X);
-        sortedX   // Return the Vec of count HashMaps
+        let sorted_vec = self._sort_vocabulary_count(vec_of_map);
+        sorted_vec   // Return the Vec of count HashMaps
+    }
+    
+    pub fn fit_transform2(&mut self, docs: Vec<&'a str>) -> Array2<i32> {
+        // This should implement simultaneous creation of transformed vector
+        // and vocabulary to avoid looping twice over vocabulary space by skipping
+        // sorting. Follow basic flow of fit_transform1() and implement
+        // simultaneous update of the vector/array. This may come at the
+        // cost of memory, so may want to consider consuming the original docs.
+        let mut sorted_vec = Array2::<i32>::zeros((5, 5));
+        sorted_vec
     }
 
-    pub fn reverse_vocabulary_hashmap(&self) -> HashMap<i32, &'a str> {
-        // Utility method that returns a HashMap for vocab where k and v are swapped
-        let mut vocabulary_inverted: HashMap<i32, &str> = HashMap::new();
-        for (k, v) in self.vocabulary_.iter() {
-        vocabulary_inverted.insert(*v, k);
-        }
-        vocabulary_inverted
-    }
+
+    // Also, split up fit_transform into generalizable functions that can be
+    // sent out as trait methods. That way, so functions can be shared with
+    // TfidfVectorizer to com.
 }
 

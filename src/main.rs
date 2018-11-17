@@ -19,7 +19,7 @@ fn main() {
     
     // Testing CountVectorizer
     let mut vectorizer = CountVectorizer::new();
-    let x = vectorizer.fit_transform(docs);
+    let x = vectorizer.fit_transform1(docs);
     
     // Print original docs
     println!("=== Example1 ===");
@@ -35,9 +35,11 @@ fn main() {
     println!("CountVector :\n{:?}", x);
     println!("\n");
 
-    println!("=== Example2 (From scikit-learn example)===");
+    println!("=== Example2 (From scikit-learn example Plus-alpha)===");
     // all vec strings are convereted to lowercase
     let vec = vec![
+        "ああ いい うう", 
+        "ああ いい ええ",
         "this is the first document.",
         "this document is the second document.",
         "and this is the third one.",
@@ -45,7 +47,7 @@ fn main() {
     ];
     println!("Docs :\n{:?}", vec);
     let mut vectorizer2 = CountVectorizer::new();
-    let x2 = vectorizer2.fit_transform(vec);
+    let x2 = vectorizer2.fit_transform1(vec);
 
     // print Word_id: Word correspondence
     let vocabulary_inverted2 = vectorizer2.reverse_vocabulary_hashmap();
