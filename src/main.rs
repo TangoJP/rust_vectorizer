@@ -26,13 +26,20 @@ fn main() {
         [10, 11, 12]
     ];
 
-    let tf1 = vectorizer::_get_term_frequency(x.clone(), "ln");
-    let tf2 = vectorizer::_get_term_frequency(y.clone(), "ln");
-    println!("X TF{:?}", tf1);
-    println!("Y TF{:?}", tf2);
+    let tf1 = vectorizer::_get_term_frequency(x.clone(), "linear");
+    let tf2 = vectorizer::_get_term_frequency(y.clone(), "linear");
+    println!("X TF:\n{:?}", tf1);
+    println!("Y TF:\n{:?}", tf2);
 
-    let df1 = vectorizer::_get_document_frequency(x);
-    let df2 = vectorizer::_get_document_frequency(y);
-    println!("X DF{:?}", df1);
-    println!("Y DF{:?}", df2);
+    let df1 = vectorizer::_get_document_frequency(x.clone());
+    let df2 = vectorizer::_get_document_frequency(y.clone());
+    let mat1 = vectorizer::vec2diagonal(df1);
+    let mat2 = vectorizer::vec2diagonal(df2);
+    println!("X Mat1:\n{:?}", mat1);
+    println!("Y Mat2:\n{:?}", mat2);
+
+    let temp_tfidf1 = vectorizer::_get_idf_matrix(x, 0);
+    let temp_tfidf2 = vectorizer::_get_idf_matrix(y, 0);
+    println!("X transformed:\n{:?}", temp_tfidf1);
+    println!("Y transformed:\n{:?}", temp_tfidf2);
 }
