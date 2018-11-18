@@ -4,9 +4,10 @@ extern crate indexmap;
 
 use std::vec::Vec;
 use std::collections::HashMap;
-use regex::Regex;
 use ndarray::Array2;
 // use indexmap::IndexMap;
+
+mod tokenizer;  // implement trait related to tokenization
 
 pub struct CountVectorizer<'a> {
     pub vocabulary_ : HashMap<&'a str, i32>,
@@ -20,25 +21,6 @@ impl<'a> CountVectorizer<'a> {
         CountVectorizer {
             vocabulary_: map,
         }
-    }
-
-    fn _tokenize_single_doc(doc: &str) -> Vec<&str> {
-        let token_pattern=r"(?u)\b\w\w+\b";
-        let _re = Regex::new(token_pattern).unwrap();
-        let _tokens: Vec<&str> = _re.find_iter(doc)
-            .map(|f| f.as_str())
-            .collect();
-        _tokens
-    }
-
-    fn _tokenize_multiple_docs(docs: Vec<&str>) -> Vec<Vec<&str>> {
-        let mut _tokenized_docs: Vec<Vec<&str>> = Vec::new();
-        for doc in docs {
-            let mut _tokens: Vec<&str> ;
-            _tokens = CountVectorizer::_tokenize_single_doc(doc);
-            _tokenized_docs.push(_tokens)
-        };
-        _tokenized_docs
     }
 
     fn _sort_vocabulary_count(&self, vec_of_map: Vec<HashMap<i32, i32>>) -> Array2<i32>{
@@ -65,7 +47,7 @@ impl<'a> CountVectorizer<'a> {
 
     pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<i32> { //Vec<HashMap<i32, i32>> {
         // tokenize the document collection
-        let _tokenized_docs = CountVectorizer::_tokenize_multiple_docs(docs);
+        let _tokenized_docs = tokenizer::_tokenize_multiple_docs(docs);
 
         // Vec to store vocab. count HashMap. Variable to return.
         let mut vec_of_map: Vec<HashMap<i32, i32>> = Vec::new();

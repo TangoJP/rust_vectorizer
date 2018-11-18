@@ -5,6 +5,9 @@ extern crate vectorizer;
 // use std::vec::Vec;
 // use std::collections::HashMap;
 // use regex::Regex;
-use vectorizer:: CountVectorizer;
+// use vectorizer:: CountVectorizer;
+// use vectorizer:: tokenizer;
 
-fn main() {}
+fn main() {
+    // tokenizer::test_tokenizer();
+}
