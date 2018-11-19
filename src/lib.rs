@@ -1,3 +1,4 @@
+#[macro_use]
 extern crate ndarray;
 extern crate  regex;
 // extern crate indexmap;

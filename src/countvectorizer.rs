@@ -71,3 +71,12 @@ impl<'a> CountVectorizer<'a> {
     }
 
 }
+
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+
+//     #[test]
+//     fn test (){}
+
+// }
