@@ -2,7 +2,7 @@ extern crate ndarray;
 
 use std::vec::Vec;
 use std::collections::HashMap;
-use ndarray::{Array1, Array2};
+use ndarray::Array2;
 use tokenizer;
 
 pub struct CountVectorizer<'a> {

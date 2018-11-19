@@ -2,8 +2,8 @@ extern crate vectorizer;
 #[macro_use]
 extern crate ndarray;
 
-use vectorizer::countvectorizer;
-use ndarray::{Array1, Array2};
+// use vectorizer::countvectorizer::CountVectorizer;
+// use ndarray::{Array1, Array2};
 
 #[test]
 fn test_get_term_frequency() {
