@@ -1,6 +1,7 @@
 extern crate vectorizer;
 
-use vectorizer:: CountVectorizer;
+use vectorizer::countvectorizer::CountVectorizer;
+use vectorizer::tokenizer;
 
 #[test]
 fn example1() {
