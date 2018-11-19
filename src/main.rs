@@ -33,8 +33,8 @@ fn main() {
     // println!("X transformed:\n{:?}", temp_tfidf1);
     // println!("Y transformed:\n{:?}", temp_tfidf2);
 
-    let tfidf1 = vectorizer::tfidi_transform(x, "linear", 0);
-    let tfidf2 = vectorizer::tfidi_transform(y, "linear", 0);
+    let tfidf1 = vectorizer::tfidfvectorizer::tfidi_transform(x, "linear", 0);
+    let tfidf2 = vectorizer::tfidfvectorizer::tfidi_transform(y, "linear", 0);
     println!("X tf-idf:\n{:?}", tfidf1);
     println!("Y tf-idf:\n{:?}", tfidf2);
 }

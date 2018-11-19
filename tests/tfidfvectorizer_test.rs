@@ -2,7 +2,8 @@ extern crate vectorizer;
 #[macro_use]
 extern crate ndarray;
 
-// use vectorizer::countvectorizer::CountVectorizer;
+use vectorizer::tfidfvectorizer;
+use vectorizer::ndarray_extension;
 // use ndarray::{Array1, Array2};
 
 #[test]
@@ -20,8 +21,8 @@ fn test_get_term_frequency() {
         [10, 11, 12]
     ];
 
-    let tf1 = vectorizer::_get_term_frequency(x, "linear");
-    let tf2 = vectorizer::_get_term_frequency(y, "linear");
+    let tf1 = tfidfvectorizer::_get_term_frequency(x, "linear");
+    let tf2 = tfidfvectorizer::_get_term_frequency(y, "linear");
     println!("=== Testing Term Frequency ===");
     println!("X TF:\n{:?}", tf1);
     println!("Y TF:\n{:?}", tf2);
@@ -57,8 +58,8 @@ fn test_get_document_frequency() {
         [10, 11, 12]
     ];
 
-    let df1 = vectorizer::_get_document_frequency(x);
-    let df2 = vectorizer::_get_document_frequency(y);
+    let df1 = tfidfvectorizer::_get_document_frequency(x);
+    let df2 = tfidfvectorizer::_get_document_frequency(y);
     println!("=== Testing Document Frequency ===");
     println!("X DF:\n{:?}", df1);
     println!("Y DF:\n{:?}", df2);
@@ -76,8 +77,8 @@ fn test_vec2diagonal(){
     let vec1 = array![0.5, 0.25, 0.25];
     let vec2 = array![1.0, 1.0, 1.0];
 
-    let mat1 = vectorizer::vec2diagonal(vec1);
-    let mat2 = vectorizer::vec2diagonal(vec2);
+    let mat1 = ndarray_extension::vec2diagonal(vec1);
+    let mat2 = ndarray_extension::vec2diagonal(vec2);
     println!("=== Testing Diagonalization ===");
     println!("X Mat1:\n{:?}", mat1);
     println!("Y Mat2:\n{:?}", mat2);

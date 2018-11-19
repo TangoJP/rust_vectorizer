@@ -1,5 +1,3 @@
-extern crate  regex;
-
 use std::vec::Vec;
 use regex::Regex;
 

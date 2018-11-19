@@ -1,5 +1,3 @@
-extern crate ndarray;
-
 use std::vec::Vec;
 use std::collections::HashMap;
 use ndarray::Array2;
