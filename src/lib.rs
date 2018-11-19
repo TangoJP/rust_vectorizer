@@ -119,28 +119,29 @@ pub fn _get_document_frequency(countvector: Array2<u32>) -> Array1<f64>{
 }
 
 pub fn _get_idf_matrix(countvector: Array2<u32>, smooth_idf: u64) -> Array2<f64>{
+
+    // get countvector dimension and get document frequency vector
     let (num_rows, num_columns) = countvector.dim();
     let mut df = _get_document_frequency(countvector);
 
     // smoothe by smooth_idf (see sklearn)
     df = df + (smooth_idf as f64);
     let n_samples = (num_rows as f64) + (smooth_idf as f64);
-    println!("DF: {:?}", &df);
-    println!("n_samples: {:?}", &n_samples);
-
-    let mut idf = Array1::<f64>::zeros(num_columns);
-    idf = idf + n_samples;
-    idf = (idf / df);
+ 
+    // Caclulate idf and convert to diagonal matrix
+    let mut idf = n_samples / df;
     idf = idf.mapv(f64::ln) + 1.;
-    println!("IDF: {:?}", &idf);
     vec2diagonal(idf)
 }
 
 
-// fn tfidi_transform(countvector: Array2<u32>) -> Array2<f64> {
-//     let mut sorted_vec = Array2::<f64>::zeros((2, 2));
-//     sorted_vec
-// }
+pub fn tfidi_transform(countvector: Array2<u32>, tf_method: &str, smooth_idf: u64) -> Array2<f64> {
+
+    let tf = _get_term_frequency(countvector.clone(), tf_method);
+    let idf = _get_idf_matrix(countvector, smooth_idf);
+    let tfidf = tf.dot(&idf);
+    tfidf
+}
 
 // pub struct TfidfVectorizer<'a> {
 //     // pub vocabulary_ : HashMap<&'a str, i32>,

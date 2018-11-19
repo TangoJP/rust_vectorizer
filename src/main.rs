@@ -17,7 +17,7 @@ fn main() {
         [1, 0, 0],
         [0, 1, 0],
         [0, 0, 1],
-        [1, 0, 0]
+        [2, 0, 0]
     ];
     let y = array![
         [1, 2, 3],
@@ -25,21 +25,16 @@ fn main() {
         [7, 8, 9],
         [10, 11, 12]
     ];
+    // let z = y.clone().mapv(|element| element as f64);
+    // println!("{:?}", 1./z);
 
-    let tf1 = vectorizer::_get_term_frequency(x.clone(), "linear");
-    let tf2 = vectorizer::_get_term_frequency(y.clone(), "linear");
-    println!("X TF:\n{:?}", tf1);
-    println!("Y TF:\n{:?}", tf2);
+    // let temp_tfidf1 = vectorizer::_get_idf_matrix(x, 1);
+    // let temp_tfidf2 = vectorizer::_get_idf_matrix(y, 0);
+    // println!("X transformed:\n{:?}", temp_tfidf1);
+    // println!("Y transformed:\n{:?}", temp_tfidf2);
 
-    let df1 = vectorizer::_get_document_frequency(x.clone());
-    let df2 = vectorizer::_get_document_frequency(y.clone());
-    let mat1 = vectorizer::vec2diagonal(df1);
-    let mat2 = vectorizer::vec2diagonal(df2);
-    println!("X Mat1:\n{:?}", mat1);
-    println!("Y Mat2:\n{:?}", mat2);
-
-    let temp_tfidf1 = vectorizer::_get_idf_matrix(x, 0);
-    let temp_tfidf2 = vectorizer::_get_idf_matrix(y, 0);
-    println!("X transformed:\n{:?}", temp_tfidf1);
-    println!("Y transformed:\n{:?}", temp_tfidf2);
+    let tfidf1 = vectorizer::tfidi_transform(x, "linear", 0);
+    let tfidf2 = vectorizer::tfidi_transform(y, "linear", 0);
+    println!("X tf-idf:\n{:?}", tfidf1);
+    println!("Y tf-idf:\n{:?}", tfidf2);
 }
