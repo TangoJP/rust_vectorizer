@@ -3,6 +3,7 @@ extern crate vectorizer;
 extern crate ndarray;
 
 use vectorizer::tfidfvectorizer;
+use vectorizer::tfidfvectorizer::TfidfVectorizer;
 use vectorizer::ndarray_extension;
 // use ndarray::{Array1, Array2};
 
@@ -21,8 +22,8 @@ fn test_get_term_frequency() {
         [10, 11, 12]
     ];
 
-    let tf1 = tfidfvectorizer::_get_term_frequency(x, "linear");
-    let tf2 = tfidfvectorizer::_get_term_frequency(y, "linear");
+    let tf1 = TfidfVectorizer::_get_term_frequency(x, "linear");
+    let tf2 = TfidfVectorizer::_get_term_frequency(y, "linear");
     println!("=== Testing Term Frequency ===");
     println!("X TF:\n{:?}", tf1);
     println!("Y TF:\n{:?}", tf2);
@@ -58,8 +59,8 @@ fn test_get_document_frequency() {
         [10, 11, 12]
     ];
 
-    let df1 = tfidfvectorizer::_get_document_frequency(x);
-    let df2 = tfidfvectorizer::_get_document_frequency(y);
+    let df1 = TfidfVectorizer::_get_document_frequency(x);
+    let df2 = TfidfVectorizer::_get_document_frequency(y);
     println!("=== Testing Document Frequency ===");
     println!("X DF:\n{:?}", df1);
     println!("Y DF:\n{:?}", df2);
@@ -95,4 +96,26 @@ fn test_vec2diagonal(){
     
     assert_eq!(ans1, mat1);
     assert_eq!(ans2, mat2);
+}
+
+#[test]
+fn test_tfidf_transform(){
+    let x = array![
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1],
+        [2, 0, 0]
+    ];
+    let y = array![
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9],
+        [10, 11, 12]
+    ];
+
+    let tfidf1 = TfidfVectorizer::tfidi_transform(x, "linear", 0);
+    let tfidf2 = TfidfVectorizer::tfidi_transform(y, "linear", 0);
+    println!("X tf-idf:\n{:?}", tfidf1);
+    println!("Y tf-idf:\n{:?}", tfidf2);
+
 }
