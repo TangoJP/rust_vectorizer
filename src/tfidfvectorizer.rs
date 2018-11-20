@@ -4,7 +4,7 @@ use ndarray_extension;
 use countvectorizer::CountVectorizer;
 
 pub struct TfidfVectorizer<'a> {
-    pub vocabulary_: HashMap<&'a str, u32>,
+    pub vocabulary_: HashMap<&'a str, u64>,
     pub smooth_idf: bool,
     pub sublinear_tf: bool,
     pub norm: &'a str,
@@ -16,7 +16,7 @@ impl<'a> TfidfVectorizer<'a> {
     //
 
     pub fn new() -> TfidfVectorizer<'a> {
-        let map: HashMap<&'a str, u32> = HashMap::new();
+        let map: HashMap<&'a str, u64> = HashMap::new();
 
         // Return a new instance
         TfidfVectorizer {
@@ -27,7 +27,7 @@ impl<'a> TfidfVectorizer<'a> {
         }
     }
 
-    fn _create_countvector(&mut self, docs: Vec<&'a str>) -> Array2<u32> {
+    fn _create_countvector(&mut self, docs: Vec<&'a str>) -> Array2<u64> {
         // CountVectorization by CountVectorizer
         let mut count_vectorizer = CountVectorizer::new();
         let countvector = count_vectorizer.fit_transform(docs);
@@ -35,7 +35,7 @@ impl<'a> TfidfVectorizer<'a> {
         countvector
     }
 
-    fn _get_term_frequency(&self, countvector: Array2<u32>) -> Array2<f64>{
+    fn _get_term_frequency(&self, countvector: Array2<u64>) -> Array2<f64>{
         // Convert to f64 with or without sublinear adjustment
 
         let term_frequency = countvector.mapv(|element| element as f64);
@@ -48,7 +48,7 @@ impl<'a> TfidfVectorizer<'a> {
         }
     }
 
-    fn _get_document_frequency(&self, countvector: Array2<u32>) -> Array1<f64>{
+    fn _get_document_frequency(&self, countvector: Array2<u64>) -> Array1<f64>{
         // Count number of documents that contain each word
         // *implementation is probably inefficient. It's a first-pass
 
@@ -64,7 +64,7 @@ impl<'a> TfidfVectorizer<'a> {
         document_frequency
     }
 
-    fn _get_idf_matrix(&self, countvector: Array2<u32>) -> Array2<f64>{
+    fn _get_idf_matrix(&self, countvector: Array2<u64>) -> Array2<f64>{
         // create idf matrix to multiply tf matrix with
 
         // get countvector dimension and get document frequency vector
@@ -82,7 +82,7 @@ impl<'a> TfidfVectorizer<'a> {
         ndarray_extension::vec2diagonal(idf)
     }
 
-    fn _tfidi_transform(&self, countvector: Array2<u32>) -> Array2<f64> {
+    fn _tfidi_transform(&self, countvector: Array2<u64>) -> Array2<f64> {
         // Convert CountVector to Tf-Idf Vector
 
         let tf = self._get_term_frequency(countvector.clone());

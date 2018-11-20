@@ -4,12 +4,12 @@ use ndarray::Array2;
 use tokenizer;
 
 pub struct CountVectorizer<'a> {
-    pub vocabulary_ : HashMap<&'a str, u32>,
+    pub vocabulary_ : HashMap<&'a str, u64>,
 }
 
 impl<'a> CountVectorizer<'a> {
     pub fn new() -> CountVectorizer<'a> {
-        let map: HashMap<&'a str, u32> = HashMap::new();
+        let map: HashMap<&'a str, u64> = HashMap::new();
 
         // Return a new instance
         CountVectorizer {
@@ -17,10 +17,10 @@ impl<'a> CountVectorizer<'a> {
         }
     }
 
-    fn _sort_vocabulary_count(&self, vec_of_map: Vec<HashMap<u32, u32>>) -> Array2<u32>{
+    fn _sort_vocabulary_count(&self, vec_of_map: Vec<HashMap<u64, u64>>) -> Array2<u64>{
         let num_rows = vec_of_map.len();
         let num_columns = self.vocabulary_.len();
-        let mut sorted_vec = Array2::<u32>::zeros((num_rows, num_columns));
+        let mut sorted_vec = Array2::<u64>::zeros((num_rows, num_columns));
 
         for i in 0..num_rows {
             for key in vec_of_map[i].keys() {
@@ -30,28 +30,28 @@ impl<'a> CountVectorizer<'a> {
         sorted_vec
     }
 
-    pub fn reverse_vocabulary_hashmap(&self) -> HashMap<u32, &'a str> {
+    pub fn reverse_vocabulary_hashmap(&self) -> HashMap<u64, &'a str> {
         // Utility method that returns a HashMap for vocab where k and v are swapped
-        let mut vocabulary_inverted: HashMap<u32, &str> = HashMap::new();
+        let mut vocabulary_inverted: HashMap<u64, &str> = HashMap::new();
         for (k, v) in self.vocabulary_.iter() {
         vocabulary_inverted.insert(*v, k);
         }
         vocabulary_inverted
     }
 
-    pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<u32> { //Vec<HashMap<i32, i32>> {
+    pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<u64> {
         // tokenize the document collection
         let _tokenized_docs = tokenizer::Tokenizer::_tokenize_multiple_docs(docs);
 
         // Vec to store vocab. count HashMap. Variable to return.
-        let mut vec_of_map: Vec<HashMap<u32, u32>> = Vec::new();
+        let mut vec_of_map: Vec<HashMap<u64, u64>> = Vec::new();
 
         // Collect vocabulary
-        let mut vocab_indexer: u32 = 0;             // indexer for unique words
+        let mut vocab_indexer: u64 = 0;             // indexer for unique words
 
         for _doc in _tokenized_docs {
             // HashMap to store vocab. counts for a doc
-            let mut _vocab_counts: HashMap<u32, u32> = HashMap::new();
+            let mut _vocab_counts: HashMap<u64, u64> = HashMap::new();
 
             for _token in _doc {
                 // if _token is a new word, add to vocabulary_ and vocabulary_counts_
