@@ -31,7 +31,7 @@ fn example1() {
     // print Word_id: Word correspondence
     let vocabulary_inverted = vectorizer.reverse_vocabulary_hashmap();
     for i in 0..vectorizer.vocabulary_.len() {
-        println!("(Word_id: Word) : ({:?}:{:?})", i, vocabulary_inverted[&(i as u32)]);
+        println!("(Word_id: Word) : ({:?}:{:?})", i, vocabulary_inverted[&(i as u64)]);
     }
     
     println!("CountVector :\n{:?}", x);
@@ -63,7 +63,7 @@ fn example2() {
     // print Word_id: Word correspondence
     let vocabulary_inverted = vectorizer.reverse_vocabulary_hashmap();
     for i in 0..vectorizer.vocabulary_.len() {
-        println!("(Word_id: Word) : ({:?}:{:?})", i, vocabulary_inverted[&(i as u32)]);
+        println!("(Word_id: Word) : ({:?}:{:?})", i, vocabulary_inverted[&(i as u64)]);
     }
 
     println!("CountVector :\n{:?}", x2);
