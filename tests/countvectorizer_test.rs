@@ -5,8 +5,8 @@ use vectorizer::countvectorizer::CountVectorizer;
 #[test]
 fn example1() {
     let fruits_str = "apple, banana, apple, banana, orange, three, \
-                      apple. apple, banana, orange, orange, ONE, three";
-    let numbers_str = "one, two, three, two, three, apple, three. three, four, four, ONE";
+                      apple. apple, banana, orange, orange, one, three";
+    let numbers_str = "one, two, three, two, three, apple, three. three, four, four, one";
     let mut docs1: Vec<&str> = Vec::new();
     docs1.push(fruits_str);
     docs1.push(numbers_str);
@@ -16,7 +16,7 @@ fn example1() {
     assert_eq!(0, vectorizer.vocabulary_.len());    // Before fit
 
     let x = vectorizer.fit_transform(docs1.clone());
-    assert_eq!(8, vectorizer.vocabulary_.len());    // After fit
+    assert_eq!(7, vectorizer.vocabulary_.len());    // After fit
 
     let apple_col_index = vectorizer.vocabulary_["apple"];
     assert_eq!(0, apple_col_index);

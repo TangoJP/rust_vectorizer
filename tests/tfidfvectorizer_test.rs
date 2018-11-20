@@ -47,6 +47,8 @@ fn test_fit_transform(){
     
     assert_eq!(7, vectorizer.vocabulary_.len());
     assert_eq!((2, 7), tfidf.dim());
-    println!("{:?}", tfidf);
+
+    println!("Vocabulary: {:?}",vectorizer.vocabulary_);
+    println!("Tf-Idf Matrix:\n{:?}", tfidf);
 
 }

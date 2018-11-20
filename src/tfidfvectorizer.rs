@@ -53,7 +53,7 @@ impl<'a> TfidfVectorizer<'a> {
                 }
             }
         }
-        document_frequency = document_frequency/(num_rows as f64);
+        // document_frequency = document_frequency/(num_rows as f64);
         document_frequency
     }
 
@@ -78,7 +78,7 @@ impl<'a> TfidfVectorizer<'a> {
         let tf = TfidfVectorizer::_get_term_frequency(countvector.clone(), tf_method);
         let idf = TfidfVectorizer::_get_idf_matrix(countvector, smooth_idf);
         let tfidf = tf.dot(&idf);
-        tfidf
+        ndarray_extension::l2_normalize(tfidf)
     }
 
     pub fn fit_transform(&mut self, docs: Vec<&'a str>, tf_method: &str, smooth_idf: u64) -> Array2<f64> {
@@ -181,8 +181,8 @@ mod tests {
         println!("Y DF:\n{:?}", df2);
         println!("\n");
 
-        let ans1 = array![0.5, 0.25, 0.25];
-        let ans2 = array![1.0, 1.0, 1.0];
+        let ans1 = array![2., 1., 1.];//[0.5, 0.25, 0.25];
+        let ans2 = array![4., 4., 4.];//[1.0, 1.0, 1.0];
 
         assert_eq!(ans1, df1);
         assert_eq!(ans2, df2);
@@ -203,8 +203,8 @@ mod tests {
             [10, 11, 12]
         ];
 
-        let tfidf1 = TfidfVectorizer::_tfidi_transform(x, "linear", 0);
-        let tfidf2 = TfidfVectorizer::_tfidi_transform(y, "linear", 0);
+        let tfidf1 = TfidfVectorizer::_tfidi_transform(x, "linear", 1);
+        let tfidf2 = TfidfVectorizer::_tfidi_transform(y, "linear", 1);
         println!("X tf-idf:\n{:?}", tfidf1);
         println!("Y tf-idf:\n{:?}", tfidf2);
 
