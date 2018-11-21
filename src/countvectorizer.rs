@@ -41,7 +41,7 @@ impl<'a> CountVectorizer<'a> {
 
     pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<u64> {
         // tokenize the document collection
-        let _tokenized_docs = tokenizer::Tokenizer::_tokenize_multiple_docs(docs);
+        let _tokenized_docs = tokenizer::_tokenize_multiple_docs(docs);
 
         // Vec to store vocab. count HashMap. Variable to return.
         let mut vec_of_map: Vec<HashMap<u64, u64>> = Vec::new();
