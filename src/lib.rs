@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate ndarray;
 extern crate  regex;
+extern crate num;
 // extern crate indexmap;
 
 pub mod tokenizer;          // implement trait related to tokenization

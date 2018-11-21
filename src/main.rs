@@ -1,9 +1,9 @@
 
 // extern crate regex;
-extern crate vectorizer;
+// extern crate vectorizer;
 
-#[macro_use]
-extern crate ndarray;
+// #[macro_use]
+// extern crate ndarray;
 
 
 // use ndarray::prelude::*;
@@ -12,7 +12,7 @@ extern crate ndarray;
 // use regex::Regex;
 // use vectorizer:: CountVectorizer;
 // use vectorizer:: tokenizer;
-use vectorizer::ndarray_extension;
+// use vectorizer::ndarray_extension;
 
 fn main() {
 
