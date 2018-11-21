@@ -3,6 +3,11 @@ use ndarray::{Array1, Array2};
 use ndarray_extension;
 use countvectorizer::CountVectorizer;
 
+/// Transforms a ollection of documents (i.e. Vec of string slices) using
+/// Term Frequency - Inverted Document Frequency (Tf-Idf) transformation. 
+/// The basic flow of the computation follows that from scikit-learn. See
+/// also CountVectorizer.
+/// 
 pub struct TfidfVectorizer<'a> {
     pub vocabulary_: HashMap<&'a str, u64>,
     pub smooth_idf: bool,
@@ -11,10 +16,12 @@ pub struct TfidfVectorizer<'a> {
 }
 
 impl<'a> TfidfVectorizer<'a> {
-    //
-    // TfidfVectorizer implementation following sklearn one
-    //
-
+ 
+    /// Create a new instance of TfidfVectorizer. Initialized with an empty
+    /// vocabulary map (HashMap<&str, u64> type), smooth_idf=true, sublinear
+    /// _tf=false, and norm="l2" Currently only implments those default 
+    /// parameters. Other options to be implemented.
+    /// 
     pub fn new() -> TfidfVectorizer<'a> {
         let map: HashMap<&'a str, u64> = HashMap::new();
 
@@ -91,6 +98,10 @@ impl<'a> TfidfVectorizer<'a> {
         ndarray_extension::l2_normalize(tfidf)  // l2 normalize. To be refactored
     }
 
+    /// Fit and tfidf transform the collection of documents. It returns
+    /// a transformed array. The computed vocabulary HashMap is available
+    /// via vocabulary_ field of the struct after fit_transform() method is
+    /// called.
     pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<f64> {
         // Public API for transformation
         let countvector = self._create_countvector(docs);
