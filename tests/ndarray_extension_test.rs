@@ -6,16 +6,17 @@ use vectorizer::ndarray_extension;
 
 #[test]
 fn test_convert_to_f64(){
-    let x = array![
+    let mut x = array![
         [1, 2, 3],
         [2, 3, 4],
         [5, 6, 7]];
+    x = x.clone().mapv(|e| e as u32);
     let x_f64 = x.clone().mapv(|e| e as f64);
     let y = ndarray_extension::convert_matrix_to_f64(x.clone());
     assert_eq!(x_f64, y);
 
     println!("=== Testing Conversion to f64 ===");
-    println!("Original:\n{:?}", x);
+    println!("u32 version:\n{:?}", x);
     println!("f64 version:\n{:?}", y);
 
 }
@@ -43,40 +44,6 @@ fn test_vec2diagonal(){
     
     assert_eq!(ans1, mat1);
     assert_eq!(ans2, mat2);
-}
-
-#[test]
-fn test_vec2diagonal2(){
-    let vec1 = array![0.5, 0.25, 0.25];
-    let vec2 = array![1.0, 1.0, 1.0];
-    let vec3 = array![2, 2, 2];//[2_u32, 2_u32, 2_u32];
-
-    let mat1 = ndarray_extension::vec2diagonal2(vec1);
-    let mat2 = ndarray_extension::vec2diagonal2(vec2);
-    let mat3 = ndarray_extension::vec2diagonal2(vec3);
-
-    let ans1 = array![
-        [0.5, 0.0, 0.0],
-        [0.0, 0.25, 0.0],
-        [0.0, 0.0, 0.25]];
-    let ans2 = array![
-        [1.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0],
-        [0.0, 0.0, 1.0]];
-    let ans3 = array![
-        [2., 0., 0.],
-        [0., 2., 0.],
-        [0., 0., 2.]];
-
-    assert_eq!(ans1, mat1);
-    assert_eq!(ans2, mat2);
-    assert_eq!(ans3, mat3);
-
-    println!("=== Testing Diagonalization with f64 conversion ===");
-    println!("X Mat1:\n{:?}", mat1);
-    println!("Y Mat2:\n{:?}", mat2);
-    println!("Y Mat2:\n{:?}", mat3);
-    println!("\n");
 }
 
 #[test]
