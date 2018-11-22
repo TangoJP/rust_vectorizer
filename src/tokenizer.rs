@@ -1,4 +1,6 @@
 use std::vec::Vec;
+use std::cmp;
+use std::ops::Range;
 use regex::Regex;
 
 /// A struct used to tokenize a collection of documents (i.e. Vector of
@@ -6,15 +8,15 @@ use regex::Regex;
 /// for tokenization.
 /// 
 pub struct Tokenizer {
-    n_gram: u32,
+    ngram_range: (u32, u32),
 }
 
 impl Tokenizer{
     /// Create a new instance of Tokenizer with n_gram (u32) input.
     /// 
-    pub fn new(n_gram: u32) -> Tokenizer {
+    pub fn new(ngram_range: (u32, u32)) -> Tokenizer {
         Tokenizer {
-            n_gram: n_gram,
+            ngram_range: ngram_range,
         }
     }
     
@@ -29,8 +31,23 @@ impl Tokenizer{
         }
     }
 
+    fn _word_ngrams(ngram_range: (u32, u32), tokens: Vec<&str>) {
+        let (min_n, max_n) = ngram_range;
+        let original_tokens = tokens.clone();
+        let num_original_tokens = original_tokens.len() as u32;
+        let n_iter_max = cmp::min(max_n+1, num_original_tokens + 1);
+        for n in min_n..n_iter_max {
+            for i in 0..(num_original_tokens - n + 1) {
+                let range = Range {start: i as usize, end: (i + n) as usize};
+                println!("{:?}", &original_tokens[range].join(" "));
+            }
+    
+        }
+
+    }
+
     fn _tokenize_single_doc<'a>(&self, doc: &'a str) -> Vec<&'a str> {
-        let token_pattern=self._pick_pattern();
+        let token_pattern=r"(?u)\b\w\w+\b";//self._pick_pattern();
         let _re = Regex::new(token_pattern).unwrap();
         let _tokens: Vec<&str> = _re.find_iter(doc)
             .map(|f| f.as_str())
@@ -99,5 +116,37 @@ mod tests {
         println!("Bigram: {:?}", pattern2);
         println!("Trigram: {:?}", pattern3);
         println!("Invalid: {:?}", pattern4);
+    }
+
+    #[test]
+    fn test_tokenize(){
+        let corpus = vec![
+            "This is the first document.",
+            "This is the second second document.",
+            "And the third one.",
+            "Is this the first document?",
+        ];
+
+        let tk1 = Tokenizer::new(1);
+        let tk2 = Tokenizer::new(2);
+        let tk3 = Tokenizer::new(3);
+        // let tk4 = Tokenizer::new(4);
+
+        let tokens1 = tk1.tokenize(corpus.clone());
+        let tokens2 = tk2.tokenize(corpus.clone());
+        let tokens3 = tk3.tokenize(corpus);
+        // let tokens4 = tk1.tokenize(corpus);
+
+        println!("Unigram: {:?}\n", tokens1);
+        println!("Bigram: {:?}\n", tokens2);
+        println!("Trigram: {:?}\n", tokens3);
+        // println!("Invalid: {:?}", pattern4);
+    }
+
+    #[test]
+    fn test_word_ngrams(){
+        let doc = "This is the second second document.";
+        let tokens = _tokenize_single_doc(doc);
+        Tokenizer::_word_ngrams((2, 2), tokens);
     }
 }
