@@ -5,8 +5,6 @@ use std::string::String;
 use regex::Regex;
 
 
-// *** Vec<String> version of tokenizer
-
 /// A struct used to tokenize a collection of documents (i.e. Vector of
 /// string slices). It has one field, n_gram, to specify the n-gram option
 /// for tokenization.
@@ -19,7 +17,7 @@ pub struct Tokenizer {
 impl Tokenizer{
     /// Create a new instance of Tokenizer with n_gram (u32) input.
     /// 
-    pub fn new(ngram_range: (u32, u32), case: String) -> Tokenizer {
+    pub fn new(ngram_range: (u32, u32), case: &str) -> Tokenizer {
         Tokenizer {
             ngram_range: ngram_range,
             case: case.to_string(),
@@ -94,9 +92,9 @@ mod tests {
             "Is this the first document?",
         ];
 
-        let tk1 = Tokenizer::new((1, 1), "lower".to_string());
-        let tk2 = Tokenizer::new((2, 2), "lower".to_string());
-        let tk3 = Tokenizer::new((3, 3), "lower".to_string());
+        let tk1 = Tokenizer::new((1, 1), "lower");
+        let tk2 = Tokenizer::new((2, 2), "lower");
+        let tk3 = Tokenizer::new((3, 3), "lower");
         // let tk4 = Tokenizer::new(4);
 
         let tokens1 = tk1.tokenize(corpus.clone());

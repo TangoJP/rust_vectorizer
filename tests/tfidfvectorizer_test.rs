@@ -1,11 +1,7 @@
 extern crate vectorizer;
-// #[macro_use]
-// extern crate ndarray;
 
-// use vectorizer::tfidfvectorizer;
 use vectorizer::tfidfvectorizer::TfidfVectorizer;
-// use vectorizer::ndarray_extension;
-// use ndarray::{Array1, Array2};
+
 
 
 #[test]
@@ -17,7 +13,7 @@ fn test_fit_transform(){
     docs1.push(fruits_str);
     docs1.push(numbers_str);
 
-    let mut vectorizer = TfidfVectorizer::new((1, 2), "lower".to_string());
+    let mut vectorizer = TfidfVectorizer::new((1, 2), "lower");
     let tfidf = vectorizer.fit_transform(docs1);
     
     assert_eq!(24, vectorizer.vocabulary_.len());

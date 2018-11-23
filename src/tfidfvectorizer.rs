@@ -24,14 +24,14 @@ impl TfidfVectorizer {
     /// _tf=false, and norm="l2" Currently only implments those default 
     /// parameters. Other options to be implemented.
     /// 
-    pub fn new(ngram_range : (u32, u32), case: String) -> TfidfVectorizer {
+    pub fn new(ngram_range : (u32, u32), case: &str) -> TfidfVectorizer {
         let map: HashMap<String, u64> = HashMap::new();
 
         // Return a new instance
         TfidfVectorizer {
             vocabulary_: map,
             ngram_range : ngram_range,
-            case: case,
+            case: case.to_string(),
             smooth_idf: true,
             sublinear_tf: false,
             norm: "l2".to_string(),
@@ -40,7 +40,7 @@ impl TfidfVectorizer {
 
     fn _create_countvector(&mut self, docs: Vec<&str>) -> Array2<u64> {
         // CountVectorization by CountVectorizer
-        let mut count_vectorizer = CountVectorizer::new(self.ngram_range, self.case.clone());
+        let mut count_vectorizer = CountVectorizer::new(self.ngram_range, self.case.as_str());
         let countvector = count_vectorizer.fit_transform(docs);
         self.vocabulary_ = count_vectorizer.vocabulary_;
         countvector
@@ -114,6 +114,7 @@ impl TfidfVectorizer {
     }
 }
 
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -128,7 +129,7 @@ mod tests {
         docs1.push(fruits_str);
         docs1.push(numbers_str);
 
-        let mut vectorizer = TfidfVectorizer::new((1, 2), "lower".to_string());
+        let mut vectorizer = TfidfVectorizer::new((1, 2), "lower");
         assert_eq!(0, vectorizer.vocabulary_.len());    // Before counting
 
         let countvector = vectorizer._create_countvector(docs1.clone());
@@ -163,8 +164,8 @@ mod tests {
             [10, 11, 12]
         ];
 
-        let vectorizer1 = TfidfVectorizer::new((1, 2), "lower".to_string());
-        let vectorizer2 = TfidfVectorizer::new((1, 2), "lower".to_string());
+        let vectorizer1 = TfidfVectorizer::new((1, 2), "lower");
+        let vectorizer2 = TfidfVectorizer::new((1, 2), "lower");
 
         // test _get_term_frequency()
         let tf1 = vectorizer1._get_term_frequency(x.clone());
@@ -220,8 +221,8 @@ mod tests {
             [10, 11, 12]
         ];
 
-        let vectorizer1 = TfidfVectorizer::new((1, 2), "lower".to_string());
-        let vectorizer2 = TfidfVectorizer::new((1, 2), "lower".to_string());
+        let vectorizer1 = TfidfVectorizer::new((1, 2), "lower");
+        let vectorizer2 = TfidfVectorizer::new((1, 2), "lower");
 
         let tfidf1 = vectorizer1._tfidi_transform(x);
         let tfidf2 = vectorizer2._tfidi_transform(y);

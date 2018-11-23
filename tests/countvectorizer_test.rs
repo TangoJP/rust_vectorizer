@@ -12,7 +12,7 @@ fn example1() {
     docs1.push(numbers_str);
 
     // Check vocabulary size
-    let mut vectorizer = CountVectorizer::new((1, 2), "lower".to_string());
+    let mut vectorizer = CountVectorizer::new((1, 2), "lower");
     assert_eq!(0, vectorizer.vocabulary_.len());    // Before fit
 
     let x = vectorizer.fit_transform(docs1.clone());
@@ -52,7 +52,7 @@ fn example2() {
     ];
 
     // Check vocabulary size
-    let mut vectorizer = CountVectorizer::new((1, 2), "lower".to_string());
+    let mut vectorizer = CountVectorizer::new((1, 2), "lower");
     assert_eq!(0, vectorizer.vocabulary_.len());    // Before fit
 
     let x2 = vectorizer.fit_transform(docs2.clone());
