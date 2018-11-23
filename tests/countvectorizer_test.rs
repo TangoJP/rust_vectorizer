@@ -1,6 +1,6 @@
 extern crate vectorizer;
 
-use vectorizer::countvectorizer2::CountVectorizer;
+use vectorizer::countvectorizer::CountVectorizer;
 
 #[test]
 fn example1() {

@@ -1,15 +1,15 @@
 use std::vec::Vec;
 use std::collections::HashMap;
 use ndarray::Array2;
-use tokenizer2;
+use tokenizer;
 
-pub struct CountVectorizer {
-    pub vocabulary_ : HashMap<String, u64>,//<&'a str, u64>,
+pub struct CountVectorizer<'a> {
+    pub vocabulary_ : HashMap<&'a str, u64>,
 }
 
-impl CountVectorizer {
-    pub fn new() -> CountVectorizer {
-        let map: HashMap<String, u64> = HashMap::new();
+impl<'a> CountVectorizer<'a> {
+    pub fn new() -> CountVectorizer<'a> {
+        let map: HashMap<&'a str, u64> = HashMap::new();
 
         // Return a new instance
         CountVectorizer {
@@ -30,19 +30,19 @@ impl CountVectorizer {
         sorted_vec
     }
 
-    pub fn reverse_vocabulary_hashmap(&self) -> HashMap<u64, String> {
+    pub fn reverse_vocabulary_hashmap(&self) -> HashMap<u64, &'a str> {
         // Utility method that returns a HashMap for vocab where k and v are swapped
-        let mut vocabulary_inverted: HashMap<u64, String> = HashMap::new();
+        let mut vocabulary_inverted: HashMap<u64, &str> = HashMap::new();
         for (k, v) in self.vocabulary_.iter() {
-        vocabulary_inverted.insert(*v, k.to_string());
+        vocabulary_inverted.insert(*v, k);
         }
         vocabulary_inverted
     }
 
-    pub fn fit_transform(&mut self, docs: Vec<&str>) -> Array2<u64> {
+    pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<u64> {
         // tokenize the document collection
-        let tk = tokenizer2::Tokenizer::new((1, 1));
-        let _tokenized_docs = tk.tokenize(docs);
+        let tk = tokenizer::Tokenizer::new((1, 1));
+        let _tokenized_docs = tk._tokenize_multiple_docs(docs);
 
         // Vec to store vocab. count HashMap. Variable to return.
         let mut vec_of_map: Vec<HashMap<u64, u64>> = Vec::new();
@@ -56,12 +56,12 @@ impl CountVectorizer {
 
             for _token in _doc {
                 // if _token is a new word, add to vocabulary_ and vocabulary_counts_
-                if !self.vocabulary_.contains_key(_token.as_str()) {
+                if !self.vocabulary_.contains_key(_token) {
                     self.vocabulary_.insert(_token, vocab_indexer.clone());
                     _vocab_counts.insert(vocab_indexer.clone(), 1);
                     vocab_indexer = vocab_indexer + 1;
                 } else {        // Otherwise add vocab counts
-                    let vocab_ind = self.vocabulary_[_token.as_str()];
+                    let vocab_ind = self.vocabulary_[_token];
                     *(_vocab_counts).entry(vocab_ind).or_insert(0) += 1;
                 };
             }

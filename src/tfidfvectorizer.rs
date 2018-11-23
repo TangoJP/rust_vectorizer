@@ -8,33 +8,33 @@ use countvectorizer::CountVectorizer;
 /// The basic flow of the computation follows that from scikit-learn. See
 /// also CountVectorizer.
 /// 
-pub struct TfidfVectorizer<'a> {
-    pub vocabulary_: HashMap<&'a str, u64>,
+pub struct TfidfVectorizer {
+    pub vocabulary_: HashMap<String, u64>,
     pub smooth_idf: bool,
     pub sublinear_tf: bool,
-    pub norm: &'a str,
+    pub norm: String,
 }
 
-impl<'a> TfidfVectorizer<'a> {
+impl TfidfVectorizer {
  
     /// Create a new instance of TfidfVectorizer. Initialized with an empty
-    /// vocabulary map (HashMap<&str, u64> type), smooth_idf=true, sublinear
+    /// vocabulary map (HashMap<String, u64> type), smooth_idf=true, sublinear
     /// _tf=false, and norm="l2" Currently only implments those default 
     /// parameters. Other options to be implemented.
     /// 
-    pub fn new() -> TfidfVectorizer<'a> {
-        let map: HashMap<&'a str, u64> = HashMap::new();
+    pub fn new() -> TfidfVectorizer {
+        let map: HashMap<String, u64> = HashMap::new();
 
         // Return a new instance
         TfidfVectorizer {
             vocabulary_: map,
             smooth_idf: true,
             sublinear_tf: false,
-            norm: "l2",
+            norm: "l2".to_string(),
         }
     }
 
-    fn _create_countvector(&mut self, docs: Vec<&'a str>) -> Array2<u64> {
+    fn _create_countvector(&mut self, docs: Vec<&str>) -> Array2<u64> {
         // CountVectorization by CountVectorizer
         let mut count_vectorizer = CountVectorizer::new();
         let countvector = count_vectorizer.fit_transform(docs);
@@ -102,7 +102,7 @@ impl<'a> TfidfVectorizer<'a> {
     /// a transformed array. The computed vocabulary HashMap is available
     /// via vocabulary_ field of the struct after fit_transform() method is
     /// called.
-    pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<f64> {
+    pub fn fit_transform(&mut self, docs: Vec<&str>) -> Array2<f64> {
         // Public API for transformation
         let countvector = self._create_countvector(docs);
         let tfidfvector = self._tfidi_transform(countvector);

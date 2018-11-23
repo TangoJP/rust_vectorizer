@@ -1,22 +1,38 @@
 use std::vec::Vec;
 use std::collections::HashMap;
 use ndarray::Array2;
-use tokenizer;
+use tokenizer::Tokenizer;
 
-pub struct CountVectorizer<'a> {
-    pub vocabulary_ : HashMap<&'a str, u64>,
+
+/// Struct that convers a collection of documents (i.e. Vec<&str>) into a
+/// frequency vector.
+/// 
+pub struct CountVectorizer {
+    pub vocabulary_ : HashMap<String, u64>,
+    pub ngram_range : (u32, u32),
 }
 
-impl<'a> CountVectorizer<'a> {
-    pub fn new() -> CountVectorizer<'a> {
-        let map: HashMap<&'a str, u64> = HashMap::new();
+impl CountVectorizer {
+
+    /// Create a new instance of CountVectorizer. Initialized with an empty
+    /// vocabulary map (HashMap<String, u64> type). ngrams_range parameter
+    /// to be added soon.
+    /// 
+    pub fn new() -> CountVectorizer {
+        let map: HashMap<String, u64> = HashMap::new();
 
         // Return a new instance
         CountVectorizer {
             vocabulary_: map,
+            ngram_range: (1,1),
         }
     }
 
+    // Function to conver Vec<HashMap<u64, u64>> into Array2<u64>, where each
+    // column corresponds to a key in the HashMap and the value of the HashMap
+    // the count for that key String for a row in the resulting matrix, which 
+    // represents a document.
+    //
     fn _sort_vocabulary_count(&self, vec_of_map: Vec<HashMap<u64, u64>>) -> Array2<u64>{
         let num_rows = vec_of_map.len();
         let num_columns = self.vocabulary_.len();
@@ -30,19 +46,13 @@ impl<'a> CountVectorizer<'a> {
         sorted_vec
     }
 
-    pub fn reverse_vocabulary_hashmap(&self) -> HashMap<u64, &'a str> {
-        // Utility method that returns a HashMap for vocab where k and v are swapped
-        let mut vocabulary_inverted: HashMap<u64, &str> = HashMap::new();
-        for (k, v) in self.vocabulary_.iter() {
-        vocabulary_inverted.insert(*v, k);
-        }
-        vocabulary_inverted
-    }
-
-    pub fn fit_transform(&mut self, docs: Vec<&'a str>) -> Array2<u64> {
+    /// Transform the collection of documents into word frequency count
+    /// matrix. 'fit' part refers to establishment of the vocabulary HashMap.
+    /// 
+    pub fn fit_transform(&mut self, docs: Vec<&str>) -> Array2<u64> {
         // tokenize the document collection
-        let tk = tokenizer::Tokenizer::new((1, 1));
-        let _tokenized_docs = tk._tokenize_multiple_docs(docs);
+        let tk = Tokenizer::new((1, 1));
+        let _tokenized_docs = tk.tokenize(docs);
 
         // Vec to store vocab. count HashMap. Variable to return.
         let mut vec_of_map: Vec<HashMap<u64, u64>> = Vec::new();
@@ -56,12 +66,12 @@ impl<'a> CountVectorizer<'a> {
 
             for _token in _doc {
                 // if _token is a new word, add to vocabulary_ and vocabulary_counts_
-                if !self.vocabulary_.contains_key(_token) {
+                if !self.vocabulary_.contains_key(_token.as_str()) {
                     self.vocabulary_.insert(_token, vocab_indexer.clone());
                     _vocab_counts.insert(vocab_indexer.clone(), 1);
                     vocab_indexer = vocab_indexer + 1;
                 } else {        // Otherwise add vocab counts
-                    let vocab_ind = self.vocabulary_[_token];
+                    let vocab_ind = self.vocabulary_[_token.as_str()];
                     *(_vocab_counts).entry(vocab_ind).or_insert(0) += 1;
                 };
             }
@@ -69,6 +79,18 @@ impl<'a> CountVectorizer<'a> {
         }
         let sorted_vec = self._sort_vocabulary_count(vec_of_map);
         sorted_vec   // Return the Vec of count HashMaps
+    }
+
+    /// Utility function to create a reverse vocabulary map, where the token
+    /// ID is the key and the String the value
+    /// 
+    pub fn reverse_vocabulary_hashmap(&self) -> HashMap<u64, String> {
+        // Utility method that returns a HashMap for vocab where k and v are swapped
+        let mut vocabulary_inverted: HashMap<u64, String> = HashMap::new();
+        for (k, v) in self.vocabulary_.iter() {
+        vocabulary_inverted.insert(*v, k.to_string());
+        }
+        vocabulary_inverted
     }
 
 }
