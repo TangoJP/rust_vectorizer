@@ -2,6 +2,13 @@ use std::vec::Vec;
 use std::cmp;
 use std::ops::Range;
 use regex::Regex;
+use std::string::String;
+// use std::mem;
+
+// pub fn string_Vec_to_string_slice_Vec<'a>(mut string_vec: Vec<String>) -> Vec<&'a str> {
+//     let slice_vec: Vec<_> = string_vec.drain(..).map(|e| e.as_ref()).collect();
+//     slice_vec
+// }
 
 /// A struct used to tokenize a collection of documents (i.e. Vector of
 /// string slices). It has one field, n_gram, to specify the n-gram option
@@ -20,30 +27,31 @@ impl Tokenizer{
         }
     }
     
-    // Private function for picking a pattern based on n_gram choice.
-    fn _pick_pattern<'a>(&'a self) -> &'a str {
-        let pattern_choice = self.n_gram;
-        match pattern_choice { // this can be replaced by generalized &str creation function.
-            1_u32 => r"(?u)\b\w\w+\b",
-            2_u32 => r"(?u)(\b\w\w+\b){2}",
-            3_u32 => r"(?u)(\b\w\w+\b){3}",
-            _ => "None" // <= implement error handling here! or generalize this to n-grams
-        }
-    }
+    fn _word_ngrams<'a>(&self, tokens: Vec<&'a str>) -> Vec<String> {
+        let (min_n, max_n) = self.ngram_range;
+        let num_tokens = tokens.len() as u32;
+        let n_iter_max = cmp::min(max_n+1, num_tokens + 1);
 
-    fn _word_ngrams(ngram_range: (u32, u32), tokens: Vec<&str>) {
-        let (min_n, max_n) = ngram_range;
-        let original_tokens = tokens.clone();
-        let num_original_tokens = original_tokens.len() as u32;
-        let n_iter_max = cmp::min(max_n+1, num_original_tokens + 1);
-        for n in min_n..n_iter_max {
-            for i in 0..(num_original_tokens - n + 1) {
-                let range = Range {start: i as usize, end: (i + n) as usize};
-                println!("{:?}", &original_tokens[range].join(" "));
-            }
-    
-        }
+        let n_s = min_n..n_iter_max;
 
+        let mut final_tokens = <Vec<String>>::new();
+        for n in n_s {
+            let i_s = 0..(num_tokens - n + 1);
+            let mut sub_tokens: Vec<_> = i_s.map(|i| {
+            // for i in 0..(num_tokens - n + 1) {
+                let n = n as usize;
+                let i = i as usize;
+                let range = Range {start: i , end: (i + n) };
+                tokens[range].join(" ").to_owned()
+            }).collect();
+            println!("{:?}", sub_tokens);
+            final_tokens.append(&mut sub_tokens);
+        }
+        final_tokens
+        // println!("{:?}", final_tokens);
+        // let _tokens: Vec<_> = final_tokens.drain(..).collect();
+        // println!("{:?}", _tokens);
+        // string_Vec_to_string_slice_Vec(_tokens)
     }
 
     fn _tokenize_single_doc<'a>(&self, doc: &'a str) -> Vec<&'a str> {
@@ -55,11 +63,11 @@ impl Tokenizer{
         _tokens
     }
 
-    fn _tokenize_multiple_docs<'a>(&self, docs: Vec<&'a str>) -> Vec<Vec<&'a str>> {
+    pub fn _tokenize_multiple_docs<'a>(&self, docs: Vec<&'a str>) -> Vec<Vec<&'a str>> {
         let mut _tokenized_docs: Vec<Vec<&str>> = Vec::new();
         for doc in docs {
             let mut _tokens: Vec<&str> ;
-            _tokens = _tokenize_single_doc(doc);
+            _tokens = self._tokenize_single_doc(doc);
             _tokenized_docs.push(_tokens)
         };
         _tokenized_docs
@@ -72,81 +80,44 @@ impl Tokenizer{
     }
 }
 
-pub fn _tokenize_single_doc(doc: &str) -> Vec<&str> {
-    let token_pattern=r"(?u)\b\w\w+\b";
-    let _re = Regex::new(token_pattern).unwrap();
-    let _tokens: Vec<&str> = _re.find_iter(doc)
-        .map(|f| f.as_str())
-        .collect();
-    _tokens
-}
-
-pub fn _tokenize_multiple_docs(docs: Vec<&str>) -> Vec<Vec<&str>> {
-    let mut _tokenized_docs: Vec<Vec<&str>> = Vec::new();
-    for doc in docs {
-        let mut _tokens: Vec<&str> ;
-        _tokens = _tokenize_single_doc(doc);
-        _tokenized_docs.push(_tokens)
-    };
-    _tokenized_docs
-}
 
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_pick_pattern(){
-        let tk1 = Tokenizer::new(1);
-        let tk2 = Tokenizer::new(2);
-        let tk3 = Tokenizer::new(3);
-        let tk4 = Tokenizer::new(4);
-        let pattern1 = tk1._pick_pattern();
-        let pattern2 = tk2._pick_pattern();
-        let pattern3 = tk3._pick_pattern();
-        let pattern4 = tk4._pick_pattern();
-        
-        assert_eq!(r"(?u)\b\w\w+\b", pattern1);
-        assert_eq!(r"(?u)(\b\w\w+\b){2}", pattern2);
-        assert_eq!(r"(?u)(\b\w\w+\b){3}", pattern3);
-        assert_eq!("None", pattern4);
-        
-        println!("Unigram: {:?}", pattern1);
-        println!("Bigram: {:?}", pattern2);
-        println!("Trigram: {:?}", pattern3);
-        println!("Invalid: {:?}", pattern4);
-    }
+    // #[test]
+    // fn test_tokenize(){
+    //     let corpus = vec![
+    //         "This is the first document.",
+    //         "This is the second second document.",
+    //         "And the third one.",
+    //         "Is this the first document?",
+    //     ];
 
-    #[test]
-    fn test_tokenize(){
-        let corpus = vec![
-            "This is the first document.",
-            "This is the second second document.",
-            "And the third one.",
-            "Is this the first document?",
-        ];
+    //     let tk1 = Tokenizer::new(1);
+    //     let tk2 = Tokenizer::new(2);
+    //     let tk3 = Tokenizer::new(3);
+    //     // let tk4 = Tokenizer::new(4);
 
-        let tk1 = Tokenizer::new(1);
-        let tk2 = Tokenizer::new(2);
-        let tk3 = Tokenizer::new(3);
-        // let tk4 = Tokenizer::new(4);
+    //     let tokens1 = tk1.tokenize(corpus.clone());
+    //     let tokens2 = tk2.tokenize(corpus.clone());
+    //     let tokens3 = tk3.tokenize(corpus);
+    //     // let tokens4 = tk1.tokenize(corpus);
 
-        let tokens1 = tk1.tokenize(corpus.clone());
-        let tokens2 = tk2.tokenize(corpus.clone());
-        let tokens3 = tk3.tokenize(corpus);
-        // let tokens4 = tk1.tokenize(corpus);
+    //     println!("Unigram: {:?}\n", tokens1);
+    //     println!("Bigram: {:?}\n", tokens2);
+    //     println!("Trigram: {:?}\n", tokens3);
+    //     // println!("Invalid: {:?}", pattern4);
+    // }
 
-        println!("Unigram: {:?}\n", tokens1);
-        println!("Bigram: {:?}\n", tokens2);
-        println!("Trigram: {:?}\n", tokens3);
-        // println!("Invalid: {:?}", pattern4);
-    }
+    // #[test]
+    // fn test_word_ngrams(){
+    //     let doc = "This is the second second document.";
 
-    #[test]
-    fn test_word_ngrams(){
-        let doc = "This is the second second document.";
-        let tokens = _tokenize_single_doc(doc);
-        Tokenizer::_word_ngrams((2, 2), tokens);
-    }
+    //     let tk = Tokenizer{ngram_range: (1, 2)};
+    //     let tokens = tk._tokenize_single_doc(doc);
+    //     let res = tk._word_ngrams(tokens);
+    //     println!("{:?}", res);
+    // }
 }
