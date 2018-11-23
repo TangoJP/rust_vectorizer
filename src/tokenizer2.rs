@@ -11,16 +11,16 @@ use regex::Regex;
 /// string slices). It has one field, n_gram, to specify the n-gram option
 /// for tokenization.
 /// 
-pub struct Tokenizer2 {
+pub struct Tokenizer {
     ngram_range: (u32, u32),
     case: String,
 }
 
-impl Tokenizer2{
+impl Tokenizer{
     /// Create a new instance of Tokenizer with n_gram (u32) input.
     /// 
-    pub fn new(ngram_range: (u32, u32)) -> Tokenizer2 {
-        Tokenizer2 {
+    pub fn new(ngram_range: (u32, u32)) -> Tokenizer {
+        Tokenizer {
             ngram_range: ngram_range,
             case: "lower".to_string(),
         }
@@ -94,9 +94,9 @@ mod tests {
             "Is this the first document?",
         ];
 
-        let tk1 = Tokenizer2::new((1, 1));
-        let tk2 = Tokenizer2::new((2, 2));
-        let tk3 = Tokenizer2::new((3, 3));
+        let tk1 = Tokenizer::new((1, 1));
+        let tk2 = Tokenizer::new((2, 2));
+        let tk3 = Tokenizer::new((3, 3));
         // let tk4 = Tokenizer::new(4);
 
         let tokens1 = tk1.tokenize(corpus.clone());

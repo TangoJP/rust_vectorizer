@@ -10,4 +10,5 @@ pub mod countvectorizer;    // countvectorizer module
 pub mod tfidfvectorizer;    // tdidfvectorizer module
 
 pub mod tokenizer2;          // implement trait related to tokenization
+pub mod countvectorizer2;    // countvectorizer module
 

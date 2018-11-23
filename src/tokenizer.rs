@@ -48,10 +48,6 @@ impl Tokenizer{
             final_tokens.append(&mut sub_tokens);
         }
         final_tokens
-        // println!("{:?}", final_tokens);
-        // let _tokens: Vec<_> = final_tokens.drain(..).collect();
-        // println!("{:?}", _tokens);
-        // string_Vec_to_string_slice_Vec(_tokens)
     }
 
     fn _tokenize_single_doc<'a>(&self, doc: &'a str) -> Vec<&'a str> {
