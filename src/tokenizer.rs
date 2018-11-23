@@ -6,16 +6,20 @@ use regex::Regex;
 
 
 /// A struct used to tokenize a collection of documents (i.e. Vector of
-/// string slices). It has one field, n_gram, to specify the n-gram option
-/// for tokenization.
+/// string slices). It has two fields, ngram_range and case to specify the 
+/// n-gram option for tokenization, and the letter case treatment, respectively.
 /// 
 pub struct Tokenizer {
-    ngram_range: (u32, u32),
-    case: String,
+    /// A range of n-values for n-grams to be included. For example
+    /// ngram_range: (1, 3) would include uni-, bi-, and tr-grams.
+    pub ngram_range: (u32, u32),
+    /// The case of the resulting tokens. Default is no conversion. Options 
+    /// are "upper" and "lower". Other inputs will use default. 
+    pub case: String,
 }
 
 impl Tokenizer{
-    /// Create a new instance of Tokenizer with n_gram (u32) input.
+    /// Create a new instance of Tokenizer with ngram_range ((u32, u32)) input.
     /// 
     pub fn new(ngram_range: (u32, u32), case: &str) -> Tokenizer {
         Tokenizer {
@@ -64,7 +68,7 @@ impl Tokenizer{
     }
 
     /// It takes a collection of documents (i.e. Vec<&str>), tokenize each 
-    /// doc with specified ngram_range, and collect returned Vec<String> 
+    /// doc with the Tokenizer's specs, and collect returned Vec<String> 
     /// into a Vec (Vec<Vec<String>> returned.
     ///
     pub fn tokenize<'a>(&self, docs: Vec<&'a str>) -> Vec<Vec<String>> {
@@ -108,13 +112,4 @@ mod tests {
         // println!("Invalid: {:?}", pattern4);
     }
 
-    // #[test]
-    // fn test_word_ngrams(){
-    //     let doc = "This is the second second document.";
-
-    //     let tk = Tokenizer2{ngram_range: (2, 3)};
-    //     let tokens = tk._tokenize_single_doc(doc);
-    //     // let res = tk._word_ngrams(tokens);
-    //     println!("{:?}", tokens);
-    // }
 }

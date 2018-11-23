@@ -1,7 +1,8 @@
 [package]
 name = "vectorizer"
 version = "0.1.0"
-authors = ["R <ryomarcher@gmail.com>"]
+authors = ["Ryo <ryomarcher@gmail.com>"]
+description = "A crate for vectorizing a collection of documents."
 
 [dependencies]
 regex = "1"

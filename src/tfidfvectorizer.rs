@@ -3,17 +3,36 @@ use ndarray::{Array1, Array2};
 use ndarray_extension;
 use countvectorizer::CountVectorizer;
 
-/// Transforms a ollection of documents (i.e. Vec of string slices) using
+/// Transforms a collection of documents (i.e. Vec of string slices) using
 /// Term Frequency - Inverted Document Frequency (Tf-Idf) transformation. 
 /// The basic flow of the computation follows that from scikit-learn. See
-/// also CountVectorizer.
+/// also countvectorizer::CountVectorizer.
 /// 
 pub struct TfidfVectorizer {
+    /// HashMap containing the vocabulary (token as String) as keys and their 
+    /// IDs (u64) as values  
     pub vocabulary_: HashMap<String, u64>,
+
+    /// A range of n-values for n-grams to be included. For example
+    /// ngram_range: (1, 3) would include uni-, bi-, and tr-grams. See also
+    /// tokenizer::Tokenizer fr details.
     pub ngram_range : (u32, u32),
+
+    /// The case of the resulting tokens. Default is no conversion. Options 
+    /// are "upper" and "lower". Other inputs will use default. See also
+    /// tokenizer::Tokenizer fr details.
     pub case: String,
+
+    /// If true, add 1 to document frequencies to smooth idf weights, preventing
+    /// zero divisions. Default is true.
     pub smooth_idf: bool,
+
+    /// If true, replace term frequency (tf) with 1 + ln(tf) (sublinear scaling). 
+    /// Default is false.
     pub sublinear_tf: bool,
+
+    /// Type of norm used for normalization. Options are "l1", "l2", "none".
+    /// Default is "l2"
     pub norm: String,
 }
 

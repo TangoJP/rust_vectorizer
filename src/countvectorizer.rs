@@ -8,8 +8,18 @@ use tokenizer::Tokenizer;
 /// frequency vector.
 /// 
 pub struct CountVectorizer {
+    /// HashMap containing the vocabulary (token as String) as keys and their 
+    /// IDs (u64) as values    
     pub vocabulary_ : HashMap<String, u64>,
+    
+    /// A range of n-values for n-grams to be included. For example
+    /// ngram_range: (1, 3) would include uni-, bi-, and tr-grams. See also
+    /// tokenizer::Tokenizer fr details.
     pub ngram_range : (u32, u32),
+    
+    /// The case of the resulting tokens. Default is no conversion. Options 
+    /// are "upper" and "lower". Other inputs will use default. See also
+    /// tokenizer::Tokenizer fr details.
     pub case: String,
 }
 
