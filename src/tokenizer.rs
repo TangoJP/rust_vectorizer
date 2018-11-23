@@ -1,3 +1,8 @@
+//! 
+//! Current issues:
+//! - Only tokenize into words and/or n-grams of words
+//! - Accents, etc are not handled
+
 use std::vec::Vec;
 use std::cmp;
 use std::ops::Range;
@@ -12,7 +17,8 @@ use regex::Regex;
 pub struct Tokenizer {
     /// A range of n-values for n-grams to be included. For example
     /// ngram_range: (1, 3) would include uni-, bi-, and tr-grams.
-    pub ngram_range: (u32, u32),
+    pub ngram_range: (u32, u32), 
+
     /// The case of the resulting tokens. Default is no conversion. Options 
     /// are "upper" and "lower". Other inputs will use default. 
     pub case: String,
@@ -23,7 +29,7 @@ impl Tokenizer{
     /// 
     pub fn new(ngram_range: (u32, u32), case: &str) -> Tokenizer {
         Tokenizer {
-            ngram_range: ngram_range,
+            ngram_range: ngram_range, // <<<=== need a code to check this input. e.g. min > max, etc
             case: case.to_string(),
         }
     }
@@ -53,17 +59,30 @@ impl Tokenizer{
     // It returns Vec<String>
     //
     fn _tokenize_single_doc<'a>(&self, doc: &'a str) -> Vec<String> {
+        // Split into words/tokens
         let token_pattern=r"(?u)\b\w\w+\b";
         let _re = Regex::new(token_pattern).unwrap();
         let _tokens: Vec<&str> = _re.find_iter(doc)
             .map(|f| f.as_str())
             .collect();
+
+        // Case conversion
         let mut _ngrams_tokens: Vec<_> = self._word_ngrams(_tokens);
-        if self.case == "lower".to_string() {
-            _ngrams_tokens = _ngrams_tokens.iter()
+        match self.case.as_str() {  // could refactor to return conversion function
+            "upper" => {
+                _ngrams_tokens = _ngrams_tokens.iter()
+                .map(|s| s.to_uppercase())
+                .collect();},
+            "lower" => {
+                _ngrams_tokens = _ngrams_tokens.iter()
                 .map(|s| s.to_lowercase())
-                .collect();
+                .collect();},
+            _ => {
+                _ngrams_tokens = _ngrams_tokens.iter()
+                .map(|s| s.to_string())
+                .collect();},
         }
+
         _ngrams_tokens
     }
 
@@ -71,6 +90,32 @@ impl Tokenizer{
     /// doc with the Tokenizer's specs, and collect returned Vec<String> 
     /// into a Vec (Vec<Vec<String>> returned.
     ///
+    /// # Examples
+    /// ```
+    /// // Collection of documents as Vec<&str>
+    /// let corpus = vec![
+    ///     "This is the first document.",
+    ///     "This is the second second document.",
+    ///     "And the third one.",
+    ///     "Is this the first document?",
+    /// ];
+    ///
+    /// // Set up tokenizers with different settings
+    /// let tk1 = Tokenizer::new((1, 1), "none");   // Unigrams with no case setting
+    /// let tk2 = Tokenizer::new((2, 2), "lower");  // Bigrams with lowercase
+    /// let tk3 = Tokenizer::new((1, 3), "upper");  // Uni~Trigrams with uppercase
+    /// 
+    /// // Tokenize with tokenizers
+    /// let tokens1 = tk1.tokenize(corpus.clone());
+    /// let tokens2 = tk2.tokenize(corpus.clone());
+    /// let tokens3 = tk3.tokenize(corpus);
+    /// 
+    /// // Print results
+    /// println!("Uni-gram ({:?}): {:?}\n", tk1.case, tokens1);
+    /// println!("Bi-gram ({:?}): {:?}\n", tk2.case, tokens2);
+    /// println!("Uni~Tri-gram ({:?}): {:?}\n", tk3.case, tokens3);
+    /// ```
+    /// 
     pub fn tokenize<'a>(&self, docs: Vec<&'a str>) -> Vec<Vec<String>> {
         let mut _tokenized_docs: Vec<Vec<String>> = Vec::new();
         for doc in docs {
@@ -96,20 +141,20 @@ mod tests {
             "Is this the first document?",
         ];
 
-        let tk1 = Tokenizer::new((1, 1), "lower");
+        let tk1 = Tokenizer::new((1, 1), "none");
         let tk2 = Tokenizer::new((2, 2), "lower");
-        let tk3 = Tokenizer::new((3, 3), "lower");
-        // let tk4 = Tokenizer::new(4);
+        let tk3 = Tokenizer::new((3, 3), "upper");
+        let tk4 = Tokenizer::new((3, 2), "");
 
         let tokens1 = tk1.tokenize(corpus.clone());
         let tokens2 = tk2.tokenize(corpus.clone());
-        let tokens3 = tk3.tokenize(corpus);
-        // let tokens4 = tk1.tokenize(corpus);
+        let tokens3 = tk3.tokenize(corpus.clone());
+        let tokens4 = tk4.tokenize(corpus);
 
-        println!("Unigram: {:?}\n", tokens1);
-        println!("Bigram: {:?}\n", tokens2);
-        println!("Trigram: {:?}\n", tokens3);
-        // println!("Invalid: {:?}", pattern4);
+        println!("Unigram ({:?}): {:?}\n", tk1.case, tokens1);
+        println!("Bigram ({:?}): {:?}\n", tk2.case, tokens2);
+        println!("Trigram ({:?}): {:?}\n", tk3.case, tokens3);
+        println!("Invalid: {:?}", tokens4);
     }
 
 }

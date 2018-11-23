@@ -4,15 +4,19 @@ extern crate regex;
 extern crate num;
 // extern crate indexmap;
 
-/// tokenization of &str documents
+/// tokenization of &str documents.
+/// 
 pub mod tokenizer;
 
-/// custom extension codes for ndarray
+/// Custom extension functions for ndarray
+/// 
 pub mod ndarray_extension;
 
-/// countvectorizer module
+/// Count vectorizer module
+/// 
 pub mod countvectorizer;
 
-/// tdidfvectorizer module
+/// Td-Idf vectorizer module
+/// 
 pub mod tfidfvectorizer;
 
