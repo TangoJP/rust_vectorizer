@@ -10,6 +10,7 @@ use tokenizer::Tokenizer;
 pub struct CountVectorizer {
     pub vocabulary_ : HashMap<String, u64>,
     pub ngram_range : (u32, u32),
+    pub case: String,
 }
 
 impl CountVectorizer {
@@ -18,13 +19,14 @@ impl CountVectorizer {
     /// vocabulary map (HashMap<String, u64> type). ngrams_range parameter
     /// to be added soon.
     /// 
-    pub fn new() -> CountVectorizer {
+    pub fn new(ngram_range: (u32, u32), case: String) -> CountVectorizer {
         let map: HashMap<String, u64> = HashMap::new();
 
         // Return a new instance
         CountVectorizer {
             vocabulary_: map,
-            ngram_range: (1,1),
+            ngram_range: ngram_range,
+            case: case.to_lowercase(),
         }
     }
 
@@ -51,7 +53,7 @@ impl CountVectorizer {
     /// 
     pub fn fit_transform(&mut self, docs: Vec<&str>) -> Array2<u64> {
         // tokenize the document collection
-        let tk = Tokenizer::new((1, 1));
+        let tk = Tokenizer::new(self.ngram_range, self.case.clone());
         let _tokenized_docs = tk.tokenize(docs);
 
         // Vec to store vocab. count HashMap. Variable to return.

@@ -17,11 +17,11 @@ fn test_fit_transform(){
     docs1.push(fruits_str);
     docs1.push(numbers_str);
 
-    let mut vectorizer = TfidfVectorizer::new();
+    let mut vectorizer = TfidfVectorizer::new((1, 2), "lower".to_string());
     let tfidf = vectorizer.fit_transform(docs1);
     
-    assert_eq!(7, vectorizer.vocabulary_.len());
-    assert_eq!((2, 7), tfidf.dim());
+    assert_eq!(24, vectorizer.vocabulary_.len());
+    assert_eq!((2, 24), tfidf.dim());
 
     println!("Vocabulary: {:?}",vectorizer.vocabulary_);
     println!("Tf-Idf Matrix:\n{:?}", tfidf);

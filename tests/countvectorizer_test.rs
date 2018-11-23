@@ -12,11 +12,11 @@ fn example1() {
     docs1.push(numbers_str);
 
     // Check vocabulary size
-    let mut vectorizer = CountVectorizer::new();
+    let mut vectorizer = CountVectorizer::new((1, 2), "lower".to_string());
     assert_eq!(0, vectorizer.vocabulary_.len());    // Before fit
 
     let x = vectorizer.fit_transform(docs1.clone());
-    assert_eq!(7, vectorizer.vocabulary_.len());    // After fit
+    assert_eq!(24, vectorizer.vocabulary_.len());    // After fit
 
     let apple_col_index = vectorizer.vocabulary_["apple"];
     assert_eq!(0, apple_col_index);
@@ -52,11 +52,11 @@ fn example2() {
     ];
 
     // Check vocabulary size
-    let mut vectorizer = CountVectorizer::new();
+    let mut vectorizer = CountVectorizer::new((1, 2), "lower".to_string());
     assert_eq!(0, vectorizer.vocabulary_.len());    // Before fit
 
     let x2 = vectorizer.fit_transform(docs2.clone());
-    assert_eq!(13, vectorizer.vocabulary_.len());    // After fit
+    assert_eq!(29, vectorizer.vocabulary_.len());    // After fit
 
     println!("=== Example2 (From scikit-learn example Plus-alpha)===");
 

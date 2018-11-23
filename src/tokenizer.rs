@@ -19,10 +19,10 @@ pub struct Tokenizer {
 impl Tokenizer{
     /// Create a new instance of Tokenizer with n_gram (u32) input.
     /// 
-    pub fn new(ngram_range: (u32, u32)) -> Tokenizer {
+    pub fn new(ngram_range: (u32, u32), case: String) -> Tokenizer {
         Tokenizer {
             ngram_range: ngram_range,
-            case: "lower".to_string(),
+            case: case.to_string(),
         }
     }
     
@@ -94,9 +94,9 @@ mod tests {
             "Is this the first document?",
         ];
 
-        let tk1 = Tokenizer::new((1, 1));
-        let tk2 = Tokenizer::new((2, 2));
-        let tk3 = Tokenizer::new((3, 3));
+        let tk1 = Tokenizer::new((1, 1), "lower".to_string());
+        let tk2 = Tokenizer::new((2, 2), "lower".to_string());
+        let tk3 = Tokenizer::new((3, 3), "lower".to_string());
         // let tk4 = Tokenizer::new(4);
 
         let tokens1 = tk1.tokenize(corpus.clone());
