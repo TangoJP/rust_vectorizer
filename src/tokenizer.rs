@@ -102,7 +102,9 @@ impl Tokenizer{
     /// into a Vec (Vec<Vec<String>> returned.
     ///
     /// # Examples
-    /// ```ignore
+    /// ```
+    /// use vectorizer::tokenizer::Tokenizer;
+    /// 
     /// // Collection of documents as Vec<&str>
     /// let corpus = vec![
     ///     "This is the first document.",
@@ -136,36 +138,4 @@ impl Tokenizer{
         };
         _tokenized_docs
     }
-}
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_tokenize(){
-        let corpus = vec![
-            "This is the first document.",
-            "This is the second second document.",
-            "And the third one.",
-            "Is this the first document?",
-        ];
-
-        let tk1 = Tokenizer::new((1, 1), "none");
-        let tk2 = Tokenizer::new((2, 2), "lower");
-        let tk3 = Tokenizer::new((3, 3), "upper");
-        let tk4 = Tokenizer::new((2, 1), "");
-
-        let tokens1 = tk1.tokenize(corpus.clone());
-        let tokens2 = tk2.tokenize(corpus.clone());
-        let tokens3 = tk3.tokenize(corpus.clone());
-        let tokens4 = tk4.tokenize(corpus);
-
-        println!("Unigram ({:?}): {:?}\n", tk1.case, tokens1);
-        println!("Bigram ({:?}): {:?}\n", tk2.case, tokens2);
-        println!("Trigram ({:?}): {:?}\n", tk3.case, tokens3);
-        println!("Invalid: {:?}", tokens4);
-    }
-
 }

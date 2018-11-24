@@ -3,6 +3,7 @@ extern crate vectorizer;
 use vectorizer::countvectorizer::CountVectorizer;
 
 #[test]
+#[ignore]
 fn example1() {
     let fruits_str = "apple, banana, apple, banana, orange, three, \
                       apple. apple, banana, orange, orange, one, three";
@@ -40,6 +41,7 @@ fn example1() {
 }
 
 #[test]
+#[ignore]
 fn example2() {
     // all vec strings were convereted to lowercase for this example
     let docs2 = vec![
@@ -71,6 +73,7 @@ fn example2() {
 }
 
 #[test]
+#[ignore]
 fn example3() {
     // all vec strings were convereted to lowercase for this example
     let docs3 = vec![

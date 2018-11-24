@@ -49,6 +49,7 @@ fn test_vec2diagonal(){
 }
 
 #[test]
+#[ignore]
 fn test_l1_normalizatin(){
     let x = array![
         [1.0, 1.0, 1.0],
@@ -67,6 +68,7 @@ fn test_l1_normalizatin(){
 }
 
 #[test]
+#[ignore]
 fn test_l2_normalization(){
     let x = array![
         [1.0, 1.0, 1.0],
