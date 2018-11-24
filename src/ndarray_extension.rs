@@ -8,19 +8,19 @@ use std::clone::Clone;
 /// It binds the Type T with Clone + ToPrimitive
 /// 
 /// # Examples
-/// ```
+/// ```rust,ignore
 /// let mut x = array![
 ///        [1, 2, 3],
 ///        [2, 3, 4],
 ///        [5, 6, 7]];
-///    x = x.clone().mapv(|e| e as u32);
-///    let x_f64 = x.clone().mapv(|e| e as f64);
-///    let y = ndarray_extension::convert_matrix_to_f64(x.clone());
-///    assert_eq!(x_f64, y);
+/// x = x.clone().mapv(|e| e as u32);
+/// let x_f64 = x.clone().mapv(|e| e as f64);
+/// let y = ndarray_extension::convert_matrix_to_f64(x.clone());
+/// assert_eq!(x_f64, y);
 ///
-///    println!("=== Testing Conversion to f64 ===");
-///    println!("u32 version:\n{:?}", x);
-///    println!("f64 version:\n{:?}", y);
+/// println!("=== Testing Conversion to f64 ===");
+/// println!("u32 version:\n{:?}", x);
+/// println!("f64 version:\n{:?}", y);
 /// ```
 /// 
 pub fn convert_matrix_to_f64<T: Clone + ToPrimitive>(array: Array2<T>) -> Array2<f64> {
@@ -28,11 +28,26 @@ pub fn convert_matrix_to_f64<T: Clone + ToPrimitive>(array: Array2<T>) -> Array2
         array_f64
 }
 
+/// Count number of non-zero rows for each column. 
+/// *** The non-zero columns for each row to be implemented
+pub fn bincount(matrix: Array2<u64>)  -> Array1<f64> {
+    let (num_rows, num_columns) = matrix.dim();
+    let mut bincounts = Array1::<f64>::zeros(num_columns);
+    for index_row in 0..num_rows {
+        for index_col in 0..num_columns {
+            if matrix[[index_row, index_col]] != 0 {
+                bincounts[index_col] += 1.;
+            }
+        }
+    }
+    bincounts
+}
+
 /// Convert an Array1<T> into diagonal Array2<f64>.
 /// It binds the Type T with Clone + ToPrimitive
 /// 
 /// # Examples
-/// ```
+/// ```rust,ignore
 /// let vec1 = array![0.5, 0.25, 0.25];
 /// let vec2 = array![1, 1, 1];
 
@@ -81,7 +96,7 @@ pub fn row_l2_norms<T: NumCast + Clone>(x: Array2<T>) -> Array1<f64> {
 /// is the sum of the absolute values of all the elements in a row.
 /// 
 /// # Examples
-/// ```
+/// ```rust,ignore
 /// let x = array![
 ///     [1.0, 1.0, 1.0],
 ///     [0.0, 1.0, 2.0],
@@ -111,7 +126,7 @@ pub fn l1_normalize<T: NumCast + Clone>(x: Array2<T>) -> Array2<f64> {
 /// are calculated using row_l2_norms().
 /// 
 /// # Examples
-/// ```
+/// ```rust,ignore
 /// let x = array![
 ///     [1.0, 1.0, 1.0],
 ///     [0.0, 1.0, 2.0],

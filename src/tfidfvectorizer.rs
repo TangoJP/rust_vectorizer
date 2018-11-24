@@ -81,17 +81,8 @@ impl TfidfVectorizer {
     fn _get_document_frequency(&self, countvector: Array2<u64>) -> Array1<f64>{
         // Count number of documents that contain each word
         // *implementation is probably inefficient. It's a first-pass
+        ndarray_extension::bincount(countvector)
 
-        let (num_rows, num_columns) = countvector.dim();
-        let mut document_frequency = Array1::<f64>::zeros(num_columns);
-        for index_row in 0..num_rows {
-            for index_col in 0..num_columns {
-                if countvector[[index_row, index_col]] != 0 {
-                    document_frequency[index_col] += 1.;
-                }
-            }
-        }
-        document_frequency
     }
 
     fn _get_idf_matrix(&self, countvector: Array2<u64>) -> Array2<f64>{

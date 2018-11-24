@@ -16,7 +16,9 @@ use regex::Regex;
 /// 
 pub struct Tokenizer {
     /// A range of n-values for n-grams to be included. For example
-    /// ngram_range: (1, 3) would include uni-, bi-, and tr-grams.
+    /// ngram_range: (1, 3) would include uni-, bi-, and tr-grams. Lower bound
+    /// should be above zero (unless -grams are to be included) and cannot
+    /// be larger than the upper bound in order for valid tokens to be returned.
     pub ngram_range: (u32, u32), 
 
     /// The case of the resulting tokens. Default is no conversion. Options 
@@ -26,10 +28,20 @@ pub struct Tokenizer {
 
 impl Tokenizer{
     /// Create a new instance of Tokenizer with ngram_range ((u32, u32)) input.
-    /// 
     pub fn new(ngram_range: (u32, u32), case: &str) -> Tokenizer {
+        // Check the specifications
+        let (min_n, max_n) = ngram_range;
+        if min_n == 0 {
+            println!("WARNING: Lower bound of of ngram_range set to 0. \
+                0-grams will be included.");
+        } else if min_n > max_n {
+            println!("WARNING: Lower bound of of ngram_range \
+                larger than upper bound. Empty tokens will be returned.")
+        } else {}
+
+        // Return tokenizer
         Tokenizer {
-            ngram_range: ngram_range, // <<<=== need a code to check this input. e.g. min > max, etc
+            ngram_range: ngram_range,
             case: case.to_string(),
         }
     }
@@ -57,7 +69,6 @@ impl Tokenizer{
 
     // tokenize a single doc (i.e. &str) by regex followed by _word_ngrams().
     // It returns Vec<String>
-    //
     fn _tokenize_single_doc<'a>(&self, doc: &'a str) -> Vec<String> {
         // Split into words/tokens
         let token_pattern=r"(?u)\b\w\w+\b";
@@ -91,7 +102,7 @@ impl Tokenizer{
     /// into a Vec (Vec<Vec<String>> returned.
     ///
     /// # Examples
-    /// ```
+    /// ```ignore
     /// // Collection of documents as Vec<&str>
     /// let corpus = vec![
     ///     "This is the first document.",
@@ -144,7 +155,7 @@ mod tests {
         let tk1 = Tokenizer::new((1, 1), "none");
         let tk2 = Tokenizer::new((2, 2), "lower");
         let tk3 = Tokenizer::new((3, 3), "upper");
-        let tk4 = Tokenizer::new((3, 2), "");
+        let tk4 = Tokenizer::new((2, 1), "");
 
         let tokens1 = tk1.tokenize(corpus.clone());
         let tokens2 = tk2.tokenize(corpus.clone());
