@@ -5,7 +5,7 @@ use vectorizer::tfidfvectorizer::TfidfVectorizer;
 
 
 #[test]
-#[ignore]
+// #[ignore]
 fn test_fit_transform(){
     let fruits_str = "apple, banana, apple, banana, orange, three, \
                         apple. apple, banana, orange, orange, one, three";
@@ -26,7 +26,7 @@ fn test_fit_transform(){
 }
 
 #[test]
-#[ignore]
+// #[ignore]
 fn tfidf_example() {
     // all vec strings were convereted to lowercase for this example
     let docs = vec![
