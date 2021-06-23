@@ -8,6 +8,11 @@ use countvectorizer::CountVectorizer;
 /// The basic flow of the computation follows that from scikit-learn. See
 /// also countvectorizer::CountVectorizer.
 /// 
+#[cfg(feature = "serde_support")]
+use serde::{Serialize, Deserialize};
+
+#[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
 pub struct TfidfVectorizer {
     /// HashMap containing the vocabulary (token as String) as keys and their 
     /// IDs (u64) as values  
